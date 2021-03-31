@@ -40,18 +40,15 @@ function ui.get_formspec(player, page)
 	if not pagedef then
 		return "" -- Invalid page name
 	end
-
+	
 	local formspec = {
-		"formspec_version[4]size[17.75,12.25]",
+		"formspec_version[4]",
+		"size["..ui_peruser.formw..","..ui_peruser.formh.."]",
 		pagedef.formspec_prepend and "" or "no_prepend[]",
-		ui.standard_background -- Background
+		ui.standard_background
 	}
-	local n = 4
 
-	if draw_lite_mode then
-		formspec[1] = "formspec_version[4]size[14,9.75]"
-		formspec[3] = ui.standard_background
-	end
+	local n = 5
 
 	local perplayer_formspec = ui.get_per_player_formspec(player_name)
 	local fsdata = pagedef.get_formspec(player, perplayer_formspec)
