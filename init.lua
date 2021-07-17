@@ -1,4 +1,4 @@
--- Unified Inventory for Minetest >= 0.4.16
+-- Unified Inventory
 
 local modpath = minetest.get_modpath(minetest.get_current_modname())
 local worldpath = minetest.get_worldpath()

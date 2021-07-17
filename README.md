@@ -25,6 +25,10 @@ Unified Inventory replaces the default survival and creative inventory.
 ## Requirements
 
  * Minetest 5.4.0+
+ * Mod `default` for category filters (contained in Minetest Game)
+ * Mod `farming` for craftable bags (contained in Minetest Game)
+ * Mod `datastorage` for waypoints (deprecated)
+
 
 # Licenses
 

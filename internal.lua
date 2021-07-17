@@ -29,6 +29,8 @@ local function formspec_button(ui_peruser, name, image, offset, pos, scale, labe
 	local element = 'image_button'
 	if minetest.registered_items[image] then
 		element = 'item_image_button'
+	elseif image:find(":", 1, true) then
+		image = "unknown_item.png"
 	end
 	local spc = (1-scale)*ui_peruser.btn_size/2
 	local size = ui_peruser.btn_size*scale
