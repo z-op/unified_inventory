@@ -133,7 +133,6 @@ local function formspec_add_categories(player, formspec, ui_peruser)
 	if category_count > ui_peruser.pagecols and category_count - scroll_offset > ui_peruser.pagecols then
 		-- next
 		formspec[n] = formspec_button(ui_peruser, "next_category", "ui_right_icon.png", categories_scroll_pos, {ui_peruser.pagecols - 1, 0}, 0.8, S("Scroll categories right"))
-		n = n + 1
 	end
 end
 
@@ -270,39 +269,35 @@ function ui.get_formspec(player, page)
 		return "" -- Invalid page name
 	end
 
-	local formspec = {
+	local fs = {
 		"formspec_version[4]",
 		"size["..ui_peruser.formw..","..ui_peruser.formh.."]",
 		pagedef.formspec_prepend and "" or "no_prepend[]",
 		ui.standard_background
 	}
 
-	local n = 5
-
 	local perplayer_formspec = ui.get_per_player_formspec(player_name)
 	local fsdata = pagedef.get_formspec(player, perplayer_formspec)
 
-	formspec[n] = fsdata.formspec
+	fs[#fs + 1] = fsdata.formspec
 
-	formspec_add_filters(player, formspec, ui_peruser)
-	n = #formspec + 1
+	formspec_add_filters(player, fs, ui_peruser)
 
 	if fsdata.draw_inventory ~= false then
 		-- Player inventory
-		formspec[n] = "listcolors[#00000000;#00000000]"
-		formspec[n+1] = ui_peruser.standard_inv
-		n = n+2
+		fs[#fs + 1] = "listcolors[#00000000;#00000000]"
+		fs[#fs + 1] = ui_peruser.standard_inv
 	end
 
 	if fsdata.draw_item_list == false then
-		return table.concat(formspec, "")
+		return table.concat(fs, "")
 	end
 
-	formspec_add_categories(player, formspec, ui_peruser)
-	formspec_add_search_box(player, formspec, ui_peruser)
-	formspec_add_item_browser(player, formspec, ui_peruser)
+	formspec_add_categories(player, fs, ui_peruser)
+	formspec_add_search_box(player, fs, ui_peruser)
+	formspec_add_item_browser(player, fs, ui_peruser)
 
-	return table.concat(formspec)
+	return table.concat(fs)
 end
 
 function ui.set_inventory_formspec(player, page)
@@ -382,61 +377,4 @@ function ui.apply_filter(player, filter, search_dir)
 	ui.active_search_direction[player_name] = search_dir
 	ui.set_inventory_formspec(player,
 	ui.current_page[player_name])
-end
-
-function ui.items_in_group(groups)
-	local items = {}
-	for name, item in pairs(minetest.registered_items) do
-		for _, group in pairs(groups:split(',')) do
-			if item.groups[group] then
-				table.insert(items, name)
-			end
-		end
-	end
-	return items
-end
-
-function ui.sort_inventory(inv)
-	local inlist = inv:get_list("main")
-	local typecnt = {}
-	local typekeys = {}
-	for _, st in ipairs(inlist) do
-		if not st:is_empty() then
-			local n = st:get_name()
-			local w = st:get_wear()
-			local m = st:get_metadata()
-			local k = string.format("%s %05d %s", n, w, m)
-			if not typecnt[k] then
-				typecnt[k] = {
-					name = n,
-					wear = w,
-					metadata = m,
-					stack_max = st:get_stack_max(),
-					count = 0,
-				}
-				table.insert(typekeys, k)
-			end
-			typecnt[k].count = typecnt[k].count + st:get_count()
-		end
-	end
-	table.sort(typekeys)
-	local outlist = {}
-	for _, k in ipairs(typekeys) do
-		local tc = typecnt[k]
-		while tc.count > 0 do
-			local c = math.min(tc.count, tc.stack_max)
-			table.insert(outlist, ItemStack({
-				name = tc.name,
-				wear = tc.wear,
-				metadata = tc.metadata,
-				count = c,
-			}))
-			tc.count = tc.count - c
-		end
-	end
-	if #outlist > #inlist then return end
-	while #outlist < #inlist do
-		table.insert(outlist, ItemStack(nil))
-	end
-	inv:set_list("main", outlist)
 end
