@@ -375,6 +375,5 @@ function ui.apply_filter(player, filter, search_dir)
 	ui.current_index[player_name] = 1
 	ui.activefilter[player_name] = filter
 	ui.active_search_direction[player_name] = search_dir
-	ui.set_inventory_formspec(player,
-	ui.current_page[player_name])
+	ui.set_inventory_formspec(player, ui.current_page[player_name])
 end

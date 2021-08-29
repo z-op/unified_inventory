@@ -330,8 +330,9 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	end
 end)
 
-
-minetest.register_on_joinplayer(function(player)
+-- waypoints_temp must be initialized before the general unified_inventory
+-- joinplayer callback is run for updating the inventory
+table.insert(minetest.registered_on_joinplayers, 1, function(player)
 	local player_name = player:get_player_name()
 	local waypoints = get_waypoint_data(player)
 
