@@ -24,6 +24,8 @@ unified_inventory = {
 	filtered_items_list = {},
 	pages = {},
 	buttons = {},
+	initialized_callbacks = {},
+	craft_registered_callbacks = {},
 
 	-- Homepos stuff
 	home_pos = {},
