@@ -238,9 +238,8 @@ local function formspec_add_item_browser(player, formspec, ui_peruser)
 					ui_peruser.btn_size, ui_peruser.btn_size,
 					name, button_name
 				)
-				formspec[n + 1] = ("tooltip[%s;%s \\[%s\\]]"):format(
-					button_name, minetest.formspec_escape(item.description),
-					item.mod_origin or "??"
+				formspec[n + 1] = ("tooltip[%s;%s]"):format(
+					button_name, minetest.formspec_escape(item.description)
 				)
 				n = n + 2
 				list_index = list_index + 1
