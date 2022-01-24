@@ -204,7 +204,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 					{to_player=player_name, gain = 1.0})
 		end
 	elseif fields.searchresetbutton then
-		if ui.current_searchbox[player_name] ~= "" then
+		if ui.activefilter[player_name] ~= "" then
 			apply_new_filter(player, "", "nochange")
 		end
 	end
