@@ -1,5 +1,11 @@
 -- Unified Inventory
 
+if not minetest.features.formspec_version_element then
+	-- At least formspec_version[] is the minimal feature requirement
+	error("Unified Inventory requires Minetest version 5.4.0 or newer.\n" ..
+		" Please update Minetest or use an older version of Unified Inventory.")
+end
+
 local modpath = minetest.get_modpath(minetest.get_current_modname())
 local worldpath = minetest.get_worldpath()
 
@@ -46,7 +52,7 @@ unified_inventory = {
 	list_img_offset = 0.13,
 	standard_background = "background9[0,0;1,1;ui_formbg_9_sliced.png;true;16]",
 
-	version = 3
+	version = 4
 }
 
 local ui = unified_inventory
@@ -170,3 +176,4 @@ end
 
 dofile(modpath.."/item_names.lua")
 dofile(modpath.."/waypoints.lua")
+dofile(modpath.."/legacy.lua") -- mod compatibility

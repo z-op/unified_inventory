@@ -14,9 +14,9 @@ end
 minetest.register_on_joinplayer(function(player)
 	local player_name = player:get_player_name()
 	unified_inventory.players[player_name] = {}
-	unified_inventory.current_index[player_name] = 1
+	unified_inventory.current_index[player_name] = 1 -- Item (~page) index
 	unified_inventory.filtered_items_list[player_name] =
-	unified_inventory.items_list
+		unified_inventory.items_list
 	unified_inventory.activefilter[player_name] = ""
 	unified_inventory.active_search_direction[player_name] = "nochange"
 	unified_inventory.apply_filter(player, "", "nochange")
@@ -244,11 +244,8 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			unified_inventory.current_page[player_name])
 end)
 
-if minetest.delete_detached_inventory then
-	minetest.register_on_leaveplayer(function(player)
-		local player_name = player:get_player_name()
-		minetest.delete_detached_inventory(player_name.."_bags")
-		minetest.delete_detached_inventory(player_name.."craftrecipe")
-		minetest.delete_detached_inventory(player_name.."refill")
-	end)
-end
+minetest.register_on_leaveplayer(function(player)
+	local player_name = player:get_player_name()
+	minetest.remove_detached_inventory(player_name.."_bags")
+	minetest.remove_detached_inventory(player_name.."refill")
+end)

@@ -378,3 +378,13 @@ function ui.apply_filter(player, filter, search_dir)
 	ui.active_search_direction[player_name] = search_dir
 	ui.set_inventory_formspec(player, ui.current_page[player_name])
 end
+
+-- Inform players about potential visual issues
+minetest.register_on_joinplayer(function(player)
+	local player_name = player:get_player_name()
+	local info = minetest.get_player_information(player_name)
+	if info and (info.formspec_version or 0) < 4 then
+		minetest.chat_send_player(player_name, S("Unified Inventory: Your game version is too old"
+			.. " and does not support the GUI requirements. You might experience visual issues."))
+	end
+end)
