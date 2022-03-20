@@ -256,8 +256,14 @@ local function formspec_add_item_browser(player, formspec, ui_peruser)
 					ui_peruser.btn_size, ui_peruser.btn_size,
 					name, button_name
 				)
+				local tooltip = item.description
+				if item.mod_origin then
+					-- "mod_origin" may not be specified for items that were
+					-- registered in a callback (during or before ServerEnv init)
+					tooltip = tooltip .. " [" .. item.mod_origin .. "]"
+				end
 				formspec[n + 1] = ("tooltip[%s;%s]"):format(
-					button_name, minetest.formspec_escape(item.description)
+					button_name, minetest.formspec_escape(tooltip)
 				)
 				n = n + 2
 				list_index = list_index + 1
