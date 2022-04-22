@@ -151,7 +151,7 @@ minetest.after(0.01, function()
 	-- Step 2: Find all matching items for the given spec (groups)
 	local function get_matching_spec_items(specname)
 		if specname:sub(1,6) ~= "group:" then
-			return { specname }
+			return { [specname] = true }
 		end
 
 		local accepted = {}
@@ -177,6 +177,7 @@ minetest.after(0.01, function()
 	end
 
 	for _, recipes in pairs(ui.crafts_for.recipe) do
+		-- List of crafts that return this item string (variable "_")
 		for _, recipe in ipairs(recipes) do
 			local ingredient_items = {}
 			for _, spec in pairs(recipe.items) do
