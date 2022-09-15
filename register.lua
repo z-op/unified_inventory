@@ -243,6 +243,9 @@ local function stack_image_button(x, y, w, h, buttonname_prefix, item)
 	return button
 end
 
+-- The recipe text contains parameters, hence they can yet not be translated.
+-- Instead, use a dummy translation call so that it can be picked up by the
+-- static parsing of the translation string update script
 local recipe_text = {
 	recipe = NS("Recipe @1 of @2"),
 	usage = NS("Usage @1 of @2"),
