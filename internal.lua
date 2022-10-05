@@ -329,7 +329,7 @@ function ui.set_inventory_formspec(player, page)
 	end
 end
 
-local function valid_def(def)
+function ui.is_itemdef_listable(def)
 	return (not def.groups.not_in_creative_inventory
 			or def.groups.not_in_creative_inventory == 0)
 		and def.description
@@ -342,9 +342,11 @@ function ui.apply_filter(player, filter, search_dir)
 		return false
 	end
 	local player_name = player:get_player_name()
+
 	local lfilter = string.lower(filter)
 	local ffilter
 	if lfilter:sub(1, 6) == "group:" then
+		-- Group filter: all groups of the item must match
 		local groups = lfilter:sub(7):split(",")
 		ffilter = function(name, def)
 			for _, group in ipairs(groups) do
@@ -356,6 +358,7 @@ function ui.apply_filter(player, filter, search_dir)
 			return true
 		end
 	else
+		-- Name filter: fuzzy match item names and descriptions 
 		local player_info = minetest.get_player_information(player_name)
 		local lang = player_info and player_info.lang_code or ""
 
@@ -368,35 +371,41 @@ function ui.apply_filter(player, filter, search_dir)
 				or llocaldesc and string.find(llocaldesc, lfilter, 1, true)
 		end
 	end
-	ui.filtered_items_list[player_name]={}
+
+	local is_itemdef_listable = ui.is_itemdef_listable
+	local filtered_items = {}
+
 	local category = ui.current_category[player_name] or 'all'
 	if category == 'all' then
 		for name, def in pairs(minetest.registered_items) do
-			if valid_def(def)
+			if is_itemdef_listable(def)
 			and ffilter(name, def) then
-				table.insert(ui.filtered_items_list[player_name], name)
+				table.insert(filtered_items, name)
 			end
 		end
 	elseif category == 'uncategorized' then
 		for name, def in pairs(minetest.registered_items) do
-			if (not ui.find_category(name))
-			and valid_def(def)
+			if is_itemdef_listable(def)
+			and not ui.find_category(name)
 			and ffilter(name, def) then
-				table.insert(ui.filtered_items_list[player_name], name)
+				table.insert(filtered_items, name)
 			end
 		end
 	else
-		for name,exists in pairs(ui.registered_category_items[category]) do
+		-- Any other category is selected
+		for name, exists in pairs(ui.registered_category_items[category]) do
 			local def = minetest.registered_items[name]
 			if exists and def
-			and valid_def(def)
+			and is_itemdef_listable(def)
 			and ffilter(name, def) then
-				table.insert(ui.filtered_items_list[player_name], name)
+				table.insert(filtered_items, name)
 			end
 		end
 	end
-	table.sort(ui.filtered_items_list[player_name])
-	ui.filtered_items_list_size[player_name] = #ui.filtered_items_list[player_name]
+	table.sort(filtered_items)
+
+	ui.filtered_items_list_size[player_name] = #filtered_items
+	ui.filtered_items_list[player_name] = filtered_items
 	ui.current_index[player_name] = 1
 	ui.activefilter[player_name] = filter
 	ui.active_search_direction[player_name] = search_dir
