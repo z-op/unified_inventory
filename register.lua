@@ -98,7 +98,7 @@ ui.register_button("misc_set_day", {
 	action = function(player)
 		local player_name = player:get_player_name()
 		if minetest.check_player_privs(player_name, {settime=true}) then
-			minetest.sound_play("birds",
+			minetest.sound_play("ui_morning",
 					{to_player=player_name, gain = 1.0})
 			minetest.set_timeofday((6000 % 24000) / 24000)
 			minetest.chat_send_player(player_name,
@@ -122,7 +122,7 @@ ui.register_button("misc_set_night", {
 	action = function(player)
 		local player_name = player:get_player_name()
 		if minetest.check_player_privs(player_name, {settime=true}) then
-			minetest.sound_play("owl",
+			minetest.sound_play("ui_owl",
 					{to_player=player_name, gain = 1.0})
 			minetest.set_timeofday((21000 % 24000) / 24000)
 			minetest.chat_send_player(player_name,
