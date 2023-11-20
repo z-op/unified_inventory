@@ -10,6 +10,9 @@ unified_inventory_bags (Enable bags) bool true
 # have this slot shown in their inventory.
 unified_inventory_trash (Enable trash) bool true
 
+# Provides waypoints on a per-player basis to remember positions on the map.
+unified_inventory_waypoints (Enable waypoints) bool true
+
 # If enabled, disabled buttons will be hidden instead of grayed out.
 unified_inventory_hide_disabled_buttons (Hide disabled buttons) bool false
 
