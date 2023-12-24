@@ -44,7 +44,10 @@ if unified_inventory.automatic_categorization then
 		-- Add minable ores to minerals and everything else (pockets of stone & sand variations) to environment
 		for _,item in  pairs(minetest.registered_ores) do
 			if item.ore_type == "scatter" then
-				local drop = minetest.registered_nodes[item.ore].drop
+				-- The NodeResolver is run *after* minetest.register_on_mods_loaded, thus the
+				-- existence of ore names were yet not checked or enforced.
+				local def = minetest.registered_nodes[item.ore] or {}
+				local drop = def.drop
 				if drop and drop ~= "" then
 					unified_inventory.add_category_item('minerals', item.ore)
 					unified_inventory.add_category_item('minerals', drop)
