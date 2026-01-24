@@ -62,6 +62,7 @@ local function compute_group_item(group_name_list)
 		if registered_rep[item] then
 			pref = 4
 		elseif string.sub(item, 1, 8) == "default:" and is_group[string.sub(item, 9)] then
+			-- TODO: Rank according to the mod load order but as of 5.15.0 there is no such API.
 			pref = 3
 		elseif is_group[item:gsub("^[^:]*:", "")] then
 			pref = 2
@@ -79,6 +80,10 @@ end
 
 local group_item_cache = {}
 
+--- @brief Finds "the best matching" item that has all of the specified groups.
+---        Use-case: get an image for recipe ingredients that are a group.
+--- @param group_name string, e.g. "tree,flammable"
+--- @return A table: `{ item = "mymod:best_fit", sole = boolean }`
 function unified_inventory.get_group_item(group_name)
 	if not group_item_cache[group_name] then
 		group_item_cache[group_name] = compute_group_item(group_name)
