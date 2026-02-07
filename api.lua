@@ -445,16 +445,12 @@ end
 ---------------- Callback registrations ----------------
 
 function ui.register_on_initialized(callback)
-	if type(callback) ~= "function" then
-		error(("Initialized callback must be a function, %s given."):format(type(callback)))
-	end
+	assert(type(callback) == "function")
 	table.insert(ui.initialized_callbacks, callback)
 end
 
 function ui.register_on_craft_registered(callback)
-	if type(callback) ~= "function" then
-		error(("Craft registered callback must be a function, %s given."):format(type(callback)))
-	end
+	assert(type(callback) == "function")
 	table.insert(ui.craft_registered_callbacks, callback)
 end
 
@@ -486,6 +482,7 @@ function ui.get_recipe_list(output)
 end
 
 function ui.get_recipe_list2(output)
+	assert(type(output) == "string")
 	return ui.crafts_for.recipe[output]
 end
 
