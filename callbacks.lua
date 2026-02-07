@@ -128,9 +128,15 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 
 	for i, def in pairs(unified_inventory.buttons) do
 		if fields[def.name] then
-			def.action(player)
-			minetest.sound_play("ui_click",
-					{to_player=player_name, gain = 0.1})
+			if def.condition == nil or def.condition(player) then
+				def.action(player)
+				minetest.sound_play("ui_click",
+						{to_player=player_name, gain = 0.1})
+			else
+				-- This branch may be executed if relevant permissions were revoked.
+				core.chat_send_player(player_name, "Action disallowed. Preconditions not met.")
+				ui.set_inventory_formspec(player, ui.current_page[player_name])
+			end
 			return
 		end
 	end
