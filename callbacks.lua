@@ -100,12 +100,12 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	local ui_peruser, _ = unified_inventory.get_per_player_formspec(player_name)
 
 	local clicked_category
-		for _, cat in ipairs(ui.category_list) do
-			if fields["category_" .. cat.name] then
-				clicked_category = cat.name
-				break
-			end
+	for _, cat in ipairs(ui.category_list) do
+		if fields["category_" .. cat.name] then
+			clicked_category = cat.name
+			break
 		end
+	end
 
 	if clicked_category and clicked_category ~= ui.current_category[player_name] then
 		ui.current_category[player_name] = clicked_category
